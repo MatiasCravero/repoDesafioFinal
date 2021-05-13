@@ -3,10 +3,10 @@
 
 spring:
   datasource:
-    host: DB_MYSQL_DESAENV04_DELUXBD_DELUXBD_ENDPOINT
-    db: deluxbd
-    username: deluxbd_WPROD
-    password: DB_MYSQL_DESAENV04_DELUXBD_DELUXBD_WPROD
+    host: DB_MYSQL_DESAENV04_DELUXEB_DELUXEB_ENDPOINT
+    db: deluxeb
+    username: deluxeb_WPROD
+    password: DB_MYSQL_DESAENV04_DELUXEB_DELUXEB_WPROD
     initialization-mode: always
     driver-class-name: com.mysql.cj.jdbc.Driver
 
