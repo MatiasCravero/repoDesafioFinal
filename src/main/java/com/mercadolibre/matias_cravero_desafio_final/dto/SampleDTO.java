@@ -1,4 +1,4 @@
-package com.mercadolibre.matias_cravero_desafio_final.dtos;
+package com.mercadolibre.matias_cravero_desafio_final.dto;
 
 import java.io.Serializable;
 

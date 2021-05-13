@@ -2,7 +2,7 @@ package com.mercadolibre.matias_cravero_desafio_final.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public class InternalServerErrorException extends ApiException {
+public class InternalServerErrorException extends com.mercadolibre.matias_cravero_desafio_final.exceptions.ApiException {
 	private static final long serialVersionUID = 1L;
 	private static final String INTERNAL_ERROR_CODE = "internal_error";
 

@@ -1,6 +1,6 @@
 package com.mercadolibre.matias_cravero_desafio_final.unit.beans;
 
-import com.mercadolibre.matias_cravero_desafio_final.dtos.SampleDTO;
+import com.mercadolibre.matias_cravero_desafio_final.dto.SampleDTO;
 import com.mercadolibre.matias_cravero_desafio_final.beans.RandomSampleBean;
 
 import org.junit.jupiter.api.Test;

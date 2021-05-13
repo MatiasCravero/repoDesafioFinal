@@ -3,7 +3,6 @@ package com.mercadolibre.matias_cravero_desafio_final.config;
 import com.mercadolibre.matias_cravero_desafio_final.exceptions.ApiError;
 import com.mercadolibre.matias_cravero_desafio_final.exceptions.ApiException;
 import com.newrelic.api.agent.NewRelic;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
