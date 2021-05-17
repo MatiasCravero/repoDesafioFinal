@@ -27,8 +27,8 @@
 
 spring:
   datasource:
-    host: localhost:3306
-    db: deluxdb
+    host: ${DB_HOST}
+    db: ${DB_NAME}
     username: ${LOCAL_DB_USER}
     password: ${LOCAL_DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver

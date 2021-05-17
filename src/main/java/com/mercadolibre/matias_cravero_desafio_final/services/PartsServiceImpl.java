@@ -5,7 +5,9 @@ package com.mercadolibre.matias_cravero_desafio_final.services;
 
 import com.mercadolibre.matias_cravero_desafio_final.dto.NewPartDto;
 import com.mercadolibre.matias_cravero_desafio_final.dto.PartDto;
+import com.mercadolibre.matias_cravero_desafio_final.dto.StockPartDto;
 import com.mercadolibre.matias_cravero_desafio_final.dto.responses.PartResponseDto;
+import com.mercadolibre.matias_cravero_desafio_final.dto.responses.StockPartResponseDto;
 import com.mercadolibre.matias_cravero_desafio_final.exceptions.ApiException;
 import com.mercadolibre.matias_cravero_desafio_final.models.*;
 import com.mercadolibre.matias_cravero_desafio_final.repositories.*;
@@ -221,5 +223,54 @@ public class PartsServiceImpl implements com.mercadolibre.matias_cravero_desafio
             case 3:
                 parts.sort(Comparator.comparing(PartRecord::getLastModification));
         }
+    }
+
+    public StockPartResponseDto validateMinStock(Integer minStock, String countryCentralHouse){
+        if(minStock < 0){
+            throw  new ApiException(HttpStatus.BAD_REQUEST.name(), "Minimum stock cannot be negative", HttpStatus.BAD_REQUEST.value());
+        }
+        CentralHouse centralHouse = centralHouseRepository.findByCountryEquals(countryCentralHouse).orElse(null);
+        if (centralHouse == null){
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "Central house not found", HttpStatus.BAD_REQUEST.value());
+        }
+
+        List<StockCentralHouse> stocksCentralHouse = stockCentralHouseRepository.findByCentralHouseId(centralHouse.getId());
+        if (stocksCentralHouse.isEmpty()){
+            throw new ApiException(HttpStatus.BAD_REQUEST.name(), "the central house does not have parts", HttpStatus.BAD_REQUEST.value());
+        }
+
+        List<Part> parts = validateMinStock(minStock, stocksCentralHouse);
+        if (parts.isEmpty())
+        {
+            throw new ApiException(HttpStatus.NOT_FOUND.name(), "There are no parts with stock less than the minimum", HttpStatus.NOT_FOUND.value());
+        }
+        List<StockPartDto> listStockPart = new ArrayList<>();
+        for(Part part: parts){
+            StockPartDto stockPartDto = new StockPartDto();
+            stockPartDto.setPartCode(part.getPartCode());
+            stockPartDto.setDescription(part.getDescription());
+            StockCentralHouse sch = stockCentralHouseRepository.findByPartIdEqualsAndCentralHouseIdEquals(part.getId(), centralHouse.getId());
+            Integer units = minStock - sch.getQuantity();
+            stockPartDto.setMessage("The part is " + units + " units below the minimum stock, you should place an order");
+
+            listStockPart.add(stockPartDto);
+        }
+
+
+        StockPartResponseDto resp = new StockPartResponseDto(listStockPart);
+
+        return resp;
+
+    }
+
+    public List<Part> validateMinStock(Integer minStock, List<StockCentralHouse> stocks){
+        List<Part> resp = new ArrayList<>();
+        for (StockCentralHouse sch: stocks){
+            if (sch.getQuantity() < minStock){
+                resp.add(sch.getPart());
+            }
+        }
+
+        return resp;
     }
 }

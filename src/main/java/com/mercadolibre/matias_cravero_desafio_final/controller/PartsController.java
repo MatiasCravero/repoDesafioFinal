@@ -2,6 +2,7 @@ package com.mercadolibre.matias_cravero_desafio_final.controller;
 
 import com.mercadolibre.matias_cravero_desafio_final.dto.NewPartDto;
 import com.mercadolibre.matias_cravero_desafio_final.dto.responses.PartResponseDto;
+import com.mercadolibre.matias_cravero_desafio_final.dto.responses.StockPartResponseDto;
 import com.mercadolibre.matias_cravero_desafio_final.services.PartsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,12 @@ public class PartsController {
     public ResponseEntity createPart(@RequestParam(name = "partCode") String partCode,
                                      @RequestParam(name = "quantity") Integer quantity){
         return new ResponseEntity(service.updateStock(partCode, quantity), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/validate_stock")
+    public ResponseEntity<StockPartResponseDto> validateMinStock(@RequestParam(name = "minStock") Integer minStock,
+                                                                 @RequestParam(name = "countryCentralHouse")String countryCentralHouse){
+        return new ResponseEntity<StockPartResponseDto>(service.validateMinStock(minStock,countryCentralHouse), HttpStatus.OK);
     }
 
 }

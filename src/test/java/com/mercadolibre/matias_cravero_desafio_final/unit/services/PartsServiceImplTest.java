@@ -7,8 +7,10 @@ import com.mercadolibre.matias_cravero_desafio_final.exceptions.ApiException;
 import com.mercadolibre.matias_cravero_desafio_final.models.Part;
 import com.mercadolibre.matias_cravero_desafio_final.models.PartRecord;
 import com.mercadolibre.matias_cravero_desafio_final.models.Provider;
+import com.mercadolibre.matias_cravero_desafio_final.models.StockCentralHouse;
 import com.mercadolibre.matias_cravero_desafio_final.repositories.*;
 import com.mercadolibre.matias_cravero_desafio_final.services.PartsServiceImpl;
+import com.mercadolibre.matias_cravero_desafio_final.unit.fixtures.OrderFixture;
 import com.mercadolibre.matias_cravero_desafio_final.unit.fixtures.PartsFixture;
 import com.mercadolibre.matias_cravero_desafio_final.util.MockitoExtension;
 import com.mercadolibre.matias_cravero_desafio_final.util.PartMapper;
@@ -294,6 +296,25 @@ class PartsServiceImplTest {
         NewPartDto expected = PartsFixture.defaultNewPartDto();
         NewPartDto actual = service.createPart(PartsFixture.defaultNewPartDto());
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @DisplayName("Central house not found -> method validateMinStock")
+    void validateMinStock1()throws Exception{
+        Exception e = assertThrows(ApiException.class,
+                () -> service.validateMinStock(1, "Villa Gesel"));
+        assertEquals("Central house not found", e.getMessage());
+    }
+
+    @Test
+    @DisplayName("Central house does not have parts -> method validateMinStock")
+    void validateMinStock2() throws Exception{
+        Mockito.when(centralHouseRepositoryMock.findByCountryEquals(Mockito.any())).thenReturn(Optional.of(OrderFixture.defaultCentralHouse()));
+        List<StockCentralHouse> list = new ArrayList<>();
+        Mockito.when(stockCentralHouseRepositoryMock.findByCentralHouseId(Mockito.any())).thenReturn(list);
+        Exception e = assertThrows(ApiException.class,
+                () -> service.validateMinStock(1, "Villa Gesel"));
+        assertEquals("the central house does not have parts", e.getMessage());
     }
 
 
