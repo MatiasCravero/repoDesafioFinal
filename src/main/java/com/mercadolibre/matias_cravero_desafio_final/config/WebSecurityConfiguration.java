@@ -3,6 +3,7 @@ package com.mercadolibre.matias_cravero_desafio_final.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -40,16 +41,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/api/v1/users/*")
-                .hasAnyAuthority("ADMIN")
-                .antMatchers("/api/v1/parts/*")
-                .hasAnyAuthority("ADMIN")
-                .antMatchers("/api/v1/parts/orders")
-                .authenticated()
-                .anyRequest()
-                .permitAll()
-                .and()
-                .httpBasic();
+                .antMatchers("/ping").permitAll()
+                .antMatchers("/v3/api-docs").permitAll()
+                .antMatchers("/fake").permitAll()
+                .antMatchers("/api/v1/users/*").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST,"/api/v1/parts").hasAnyAuthority("ADMIN")
+                .antMatchers("/api/v1/parts/orders/update_status").hasAnyAuthority("ADMIN")
+                .antMatchers("/api/v1/sales").hasAnyAuthority("ADMIN")
+                .antMatchers("/api/v1/sales/*").hasAnyAuthority("ADMIN")
+                .antMatchers("/*").hasAnyAuthority("ADMIN", "REGULAR")
+                .anyRequest().authenticated()
+                .and().httpBasic();
     }
 
     @Bean
